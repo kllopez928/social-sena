@@ -1,0 +1,77 @@
+<app-nav></app-nav>
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main style="margin-top: 5rem !important;">
+  
+    <!-- Container START -->
+    <div class="container">
+      <div class="row g-4">
+  
+        <!-- Sidenav START -->
+        <div class="col-lg-3">
+          <app-card-perfil></app-card-perfil>
+        </div>
+        <!-- Sidenav END -->
+  
+        <!-- Main content START -->
+        <div class="col-md-8 col-lg-6 vstack gap-4">
+          
+            <app-card-historias></app-card-historias>
+
+            <ng-container *ngIf="load_data">
+              <div class="text-center py-3" style="margin-top: 1rem;">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            </ng-container>
+            <ng-container *ngIf="!load_data">
+              <div class="card" *ngFor="let item of usuarios">
+                <div class="card-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <!-- Avatar -->
+                            <div class="avatar avatar-story me-2">
+                                <a> <img class="avatar-img rounded-circle" [src]="item.avatar" alt=""> </a>
+                            </div>
+                            <!-- Info -->
+                            <div>
+                                <div class="nav nav-divider">
+                                    <h6 class="nav-item card-title mb-0"> <a> {{item.nombres}}  {{item.apellidos}}</a></h6>
+                                    <span class="nav-item small"> {{item.username}}</span>
+                                </div>
+                                <p class="small mb-0" *ngIf="item.profesion">
+                                    {{item.profesion}}
+                                </p>
+                                <p class="small mb-0" *ngIf="!item.profesion">
+                                    {{item.email}}
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Card feed action dropdown START -->
+                        <a [routerLink]="['/cuenta/'+item.username+'/posts']" class="btn btn-primary-soft btn-sm" style="cursor: pointer;">
+                          Ver perfil
+                        </a>
+                        <!-- Card feed action dropdown END -->
+                    </div>
+                </div>
+            </div>
+            </ng-container>
+          
+        </div>
+        <!-- Main content END -->
+  
+        <!-- Right sidebar START -->
+        <div class="col-lg-3">
+          <app-card-usuarios></app-card-usuarios>
+        </div>
+        <!-- Right sidebar END -->
+  
+      </div> <!-- Row END -->
+    </div>
+    <!-- Container END -->
+  
+  </main>
+  <!-- **************** MAIN CONTENT END **************** -->
+
+

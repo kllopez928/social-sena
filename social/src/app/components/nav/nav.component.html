@@ -1,0 +1,195 @@
+<!-- =======================
+Header START -->
+<header class="navbar-light fixed-top header-static bg-mode">
+
+    <!-- Logo Nav START -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <!-- Logo START -->
+            <a class="navbar-brand" [routerLink]="['/']">
+				<span id="text-logo">Red Social</span>
+			</a>
+            <!-- Logo END -->
+
+            <!-- Responsive navbar toggler -->
+            <button class="navbar-toggler ms-auto icon-md btn btn-light p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-animation">
+                <span></span>
+                <span></span>
+                <span></span>
+                </span>
+            </button>
+
+            <!-- Main navbar START -->
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+
+                <!-- Nav Search START -->
+                <div class="nav mt-3 mt-lg-0 flex-nowrap align-items-center px-4 px-lg-0">
+                    <div class="nav-item w-100">
+                        <div class="rounded position-relative">
+                            <input class="form-control ps-5 bg-light" type="search" placeholder="Buscar usuario" aria-label="Search" name="search" [(ngModel)]="search" (keyup.ENTER)="search_usuario()">
+                            <button class="btn bg-transparent px-2 py-0 position-absolute top-50 start-0 translate-middle-y" type="button"><i class="bi bi-search fs-5"> </i></button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Nav Search END -->
+
+            </div>
+            <!-- Main navbar END -->
+            <!--  -->
+            <!-- Nav right START -->
+            <ul class="nav flex-nowrap align-items-center ms-sm-3 list-unstyled">
+
+                <li class="nav-item dropdown ms-2">
+                    <a class="nav-link icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                        <span *ngIf="notificaciones.length >= 1" class="badge-notif animation-blink"></span>
+						<i class="bi bi-bell-fill fs-6"> </i>
+					</a>
+                    <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0" aria-labelledby="notifDropdown">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="m-0">Notificaciones ({{notificaciones.length}})
+                                </h6>
+
+                            </div>
+                            <div class="card-body p-0" style="max-height: 280px !important;
+                            overflow: hidden !important;
+                            overflow-y: auto !important;">
+                                <div *ngIf="load_notificacion" class="text-center py-3" style="margin-top: 1rem;">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="!load_notificacion">
+                                    <ul  *ngIf="notificaciones.length >= 1" class="list-group list-group-flush list-unstyled p-2">
+
+                                        <li *ngFor="let item of notificaciones">
+                                            <a (click)="open_notificacion(item)" class="list-group-item list-group-item-action rounded d-flex border-0 mb-1 p-3" style="cursor: pointer;">
+                                            <div class="avatar text-center d-none d-sm-inline-block">
+                                                <div class="avatar-img rounded-circle bg-success">
+                                                    <img [src]="item.usuario_interaccion.avatar" style="border-radius: 50%;">
+                                                </div>
+                                            </div>
+                                            <div class="ms-sm-3">
+                                                <div class="">
+                                                    <p class="small" style="margin-bottom: 0px;">{{item.descripcion}}</p>
+                                                    <small style="font-size: 0.7rem;
+                                                    color: #ccc;">{{item.createdAt|dateAgo}}</small>
+                                                </div>
+                                            </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+
+
+                                    <div class="text-center" style="margin-top: 1rem !important;margin-bottom: 1rem !important;" *ngIf="notificaciones.length == 0">
+                                        <span class="text-muted" style="color: #897f7f !important;">
+                                            No tienes notificaciones</span>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown ms-2">
+                    <a class="nav-link icon-md btn btn-light p-0" href="#" id="notifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                        <span *ngIf="invitaciones.length >= 1" class="badge-notif animation-blink"></span>
+						<i class="bi bi-people-fill fs-6"> </i>
+					</a>
+                    <div class="dropdown-menu dropdown-animation dropdown-menu-end dropdown-menu-size-md p-0 shadow-lg border-0" aria-labelledby="notifDropdown">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h6 class="m-0">Invitaciones
+                                    <span class="badge bg-danger bg-opacity-10 text-danger ms-2">{{invitaciones.length}}</span>
+                                </h6>
+
+                            </div>
+                            <div class="card-body p-0" style="max-height: 280px !important;
+                            overflow: hidden !important;
+                            overflow-y: auto !important;">
+                                <div *ngIf="load_invitacion" class="text-center py-3" style="margin-top: 1rem;">
+                                    <div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
+                                <ng-container *ngIf="!load_invitacion">
+                                    <ul class="list-group list-group-flush list-unstyled p-2" *ngIf="invitaciones.length >= 1">
+                                        <!-- Notif item -->
+                                        <li *ngFor="let item of invitaciones">
+                                            <div class="list-group-item list-group-item-action rounded badge-unread d-flex border-0 mb-1 p-3">
+                                                <div class="avatar text-center d-none d-sm-inline-block">
+                                                    <img class="avatar-img rounded-circle" src="assets/images/avatar/01.jpg" alt="">
+                                                </div>
+                                                <div class="ms-sm-3">
+                                                    <div class=" d-flex">
+                                                        <p class="small mb-2"><b>{{item.usuario_origen.nombres}}</b> te envió una solicitud de amistad.</p>
+                                                        <p class="small ms-3 text-nowrap">{{item.createdAt|dateAgo}}</p>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <button (click)="set_invitacion('Aprobar',item._id,item)" class="btn btn-sm py-1 btn-primary me-2">
+                                                            Aceptar 
+                                                        </button>
+                                                        <button (click)="set_invitacion('Denegar',item._id,item)" class="btn btn-sm py-1 btn-primary-soft">
+                                                            Denegar 
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        
+                                    </ul>
+                                </ng-container>
+                                <div class="text-center" style="margin-top: 1rem !important;margin-bottom: 1rem !important;" *ngIf="invitaciones.length == 0">
+                                    <span class="text-muted" style="color: #897f7f !important;">No tienes invitaciones</span>
+                                </div>
+                            </div>
+                            <div class="card-footer text-center">
+                                <a class="btn btn-sm btn-primary-soft" [routerLink]="['/cuenta/invitaciones']">Todas las invitaciones</a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <!-- Notification dropdown END -->
+
+                <li class="nav-item ms-2 dropdown">
+                    <a class="nav-link btn icon-md p-0" href="#" id="profileDropdown" role="button" data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
+					<img class="avatar-img rounded-2" [src]="avatar" alt="">
+				</a>
+                    <ul class="dropdown-menu dropdown-animation dropdown-menu-end pt-3 small me-md-n3" aria-labelledby="profileDropdown">
+                        <!-- Profile info -->
+                        <li class="px-3">
+                            <div class="d-flex align-items-center position-relative">
+                                <!-- Avatar -->
+                                <div class="avatar me-3">
+                                    <img class="avatar-img rounded-circle" [src]="avatar" alt="avatar">
+                                </div>
+                                <div>
+                                    <a class="h6 stretched-link" [routerLink]="['/cuenta',user.username]">
+										{{user.nombres}} {{user.apellidos}}
+									</a>
+                                    <p class="small m-0">{{user.email}}</p>
+                                </div>
+                            </div>
+                            <a class="dropdown-item btn btn-primary-soft btn-sm my-2 text-center" [routerLink]="['/cuenta/'+user.username+'/posts']">Ver perfil</a>
+                        </li>
+                        <!-- Links -->
+                        <li><a class="dropdown-item" [routerLink]="['/cuenta/configuracion']" routerLinkActive="router-link-active"><i class="bi bi-gear fa-fw me-2"></i>Mi cuenta</a></li>
+                        
+                        
+                        <li class="dropdown-divider"></li>
+                        <li><a class="dropdown-item bg-danger-soft-hover" style="cursor: pointer;" (click)="logout()"><i class="bi bi-power fa-fw me-2"></i>Cerrar sesión</a></li>
+                        
+                        
+                    </ul>
+                </li>
+                <!-- Profile START -->
+
+            </ul>
+            <!-- Nav right END -->
+        </div>
+    </nav>
+    <!-- Logo Nav END -->
+</header>
+<!-- =======================
+Header END -->

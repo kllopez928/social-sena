@@ -1,0 +1,82 @@
+<app-nav></app-nav>
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main style="margin-top: 5rem !important;">
+    <div class="container">
+        <div class="row g-4">
+
+          <!-- Main content START -->
+          <div class="col-lg-8 vstack gap-4">
+            
+            <ng-container  *ngIf="load_data">
+              <div class="text-center py-3" style="margin-top: 1rem;">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+            </ng-container>
+
+            <ng-container *ngIf="!load_data">
+              <ng-container *ngIf="!data">
+                <h2>El usuario no fue encontrado</h2>
+              </ng-container>
+              <ng-container *ngIf="data">
+                <!-- My profile START -->
+                <app-info-perfil></app-info-perfil>
+                <!-- My profile END -->
+
+                <ng-container *ngIf="fotos.length == 0">
+                  <div class="text-center" style="margin-top: 3.5rem;">
+                    <h4>No hay fotos</h4>
+                    <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatum, a?</span>
+                  </div>
+                </ng-container>
+                <div class="card" *ngIf="fotos.length >= 1">
+                    <!-- Card header START -->
+                    <div class="card-header d-sm-flex align-items-center justify-content-between border-0 pb-0">
+                      <h5 class="card-title">Fotografías</h5>
+                    </div>
+                    <!-- Card header END -->
+                    <!-- Card body START -->
+                    <div class="card-body">
+                      <!-- Photos of you tab START -->
+                      <div class="row g-3">
+                  
+                        <!-- Photo item START -->
+                        <div class="col-sm-6 col-md-4 col-lg-4" *ngFor="let item of fotos" style="padding-right: 0px !important;
+                        padding-left: 0px !important;">
+                          <!-- Photo -->
+                          <a [routerLink]="['/post',item._id]" >
+                            <div style="background-image: url({{url}}obtener_post_img/{{item.media}}) !important;height: 300px;background-size: cover !important;
+                            background-repeat: no-repeat !important;
+                            background-position: center !important;">
+
+                            </div>
+                          </a>
+                        </div>
+                        <!-- Photo item END -->
+                  
+                      </div>
+                      <!-- Photos of you tab END -->
+                    </div>
+                    <!-- Card body END -->
+                </div>
+              </ng-container>
+            </ng-container>
+
+          </div>
+          <!-- Main content END -->
+
+          <!-- Right sidebar START -->
+          <div class="col-lg-4">
+
+              <div class="row g-4">
+                  <app-widgets-perfil></app-widgets-perfil>
+              </div>
+
+          </div>
+
+        </div>
+        <!-- Row END -->
+    </div>
+</main>

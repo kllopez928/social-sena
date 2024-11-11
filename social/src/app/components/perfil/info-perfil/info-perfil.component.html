@@ -1,0 +1,65 @@
+<ng-container *ngIf="load_data">
+    <div class="text-center py-3" style="margin-top: 1rem;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="!load_data">
+    <div class="card">
+        <!-- Cover image -->
+        <div class="h-200px rounded-top" style="background-image:url({{portada}}); background-position: center; background-size: cover; background-repeat: no-repeat;">
+            <label *ngIf="cuenta._id.toString() == user._id.toString()" class="span-portada" for="input-portada" style="background: #000000 !important;
+            color: white;
+            padding: 5px 10px;">Cambiar portada</label>
+            <input type="file" id="input-portada" style="display: none;" (change)="uploadImage($event,'Portada')">
+        </div>
+        <!-- Card body START -->
+        <div class="card-body py-0">
+            <div class="d-sm-flex align-items-start text-center text-sm-start">
+                <div>
+                    <!-- Avatar -->
+                    <label for="avatar-input" class="avatar avatar-xxl mt-n5 mb-3" style="cursor: pointer;">
+                        <img class="avatar-img rounded-circle border border-white border-3" [src]="avatar" alt="">
+                    </label>
+                    <input type="file" (change)="uploadImage($event,'Avatar')" style="display: none;" id="avatar-input">
+                </div>
+                <div class="ms-sm-4 mt-sm-3">
+                    <!-- Info -->
+                    <h1 class="mb-0 h5">
+                        {{cuenta.nombres}} {{cuenta.apellidos}} 
+                        <i class="bi bi-patch-check-fill text-success small"></i></h1>
+                    <p>{{n_amigos}} amigo(s)</p>
+                </div>
+                <!-- Button -->
+                <div class="d-flex mt-3 justify-content-center ms-sm-auto">
+                    <a *ngIf="cuenta._id == user._id" class="btn btn-primary-soft me-2" [routerLink]="['/cuenta/configuracion']"> <i class="bi bi-pencil-fill pe-1"></i> Editar perfíl </a>
+                </div>
+            </div>
+            <!-- List profile -->
+            <ul class="list-inline mb-0 text-center text-sm-start mt-3 mt-sm-0">
+                <li class="list-inline-item"><i class="bi bi-briefcase me-1"></i> 
+                    {{cuenta.profesion}}
+                </li>
+                <li class="list-inline-item"><i class="bi bi-geo-alt me-1"></i> 
+                    {{cuenta.email}}    
+                </li>
+                <li class="list-inline-item"><i class="bi bi-calendar2-plus me-1"></i> 
+                    {{cuenta.createdAt|date}}
+                </li>
+            </ul>
+        </div>
+        <!-- Card body END -->
+        <div class="card-footer mt-3 pt-2 pb-0">
+            <!-- Nav profile pages -->
+            <ul class="nav nav-bottom-line align-items-center justify-content-center justify-content-md-start mb-0 border-0">
+                <li class="nav-item"> 
+                    <a class="nav-link" [routerLink]="['/cuenta/'+username+'/posts']" routerLinkActive="active" > Publicaciones </a> 
+                </li>
+                <li class="nav-item"> 
+                    <a class="nav-link" [routerLink]="['/cuenta/'+username+'/fotos']" routerLinkActive="active" > Fotos </a> 
+                </li>
+            </ul>
+        </div>
+    </div>
+</ng-container>

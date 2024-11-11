@@ -1,0 +1,9 @@
+.span-portada{
+    color: white;
+    font-weight: 500;
+    background: #000000;
+    padding: 10px 20px;
+    margin-top: 10px;
+    cursor: pointer;
+    margin-top: 0px;
+}

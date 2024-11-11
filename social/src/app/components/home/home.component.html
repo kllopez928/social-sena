@@ -1,0 +1,330 @@
+<app-nav></app-nav>
+
+<!-- **************** MAIN CONTENT START **************** -->
+<main style="margin-top: 5rem !important;">
+  
+    <!-- Container START -->
+    <div class="container">
+      <div class="row g-4">
+  
+        <!-- Sidenav START -->
+        <div class="col-lg-3">
+          <app-card-perfil></app-card-perfil>
+        </div>
+        <!-- Sidenav END -->
+  
+        <!-- Main content START -->
+        <div class="col-md-8 col-lg-6 vstack gap-4">
+          
+          <app-card-historias></app-card-historias>
+          
+  
+          <!-- Share feed START -->
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex">
+                <!-- Avatar -->
+                <div class="avatar avatar-xs me-2">
+                  <a> 
+                    <img class="avatar-img rounded-circle" [src]="avatar" alt=""> 
+                  </a>
+                </div>
+                <!-- Post input -->
+                <form class="w-100">
+                  <textarea class="form-control pe-4 border-0" rows="1" readonly placeholder="¿Qué estas pensando hoy?" (click)="openModalPost()" style="cursor: pointer;    background-color: #ffffff !important;"></textarea>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- Share feed END -->
+  
+          <!-- Card feed item START -->
+          <ng-container *ngIf="load_data">
+            <div class="text-center py-3" style="margin-top: 1rem;">
+                <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!load_data">
+            <ng-container *ngIf="posts.length == 0">
+              <div class="text-center" style="margin-top: 3.5rem;">
+                <h4>No hay publicaciones</h4>
+                <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Voluptatum, a?</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="posts.length >= 1">
+              <div class="card" *ngFor="let item of posts;let idx_p = index">
+                <!-- Card header START -->
+                <div class="card-header border-0 pb-0">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                      <!-- Avatar -->
+                      <div class="avatar avatar-story me-2">
+                        <a> 
+                          <img class="avatar-img rounded-circle" [src]="item.post.usuario.avatar" alt=""> 
+                        </a>
+                      </div>
+                      <!-- Info -->
+                      <div>
+                        <div class="nav nav-divider">
+                          <h6 class="nav-item .postcard-title mb-0"> 
+                            <a [routerLink]="['/cuenta/'+item.post.usuario.username+'/posts']"> {{item.post.usuario.nombres}} {{item.post.usuario.apellidos}}</a>
+                          </h6>
+                          <span class="nav-item small"> {{item.post.createdAt|dateAgo}}</span>
+                        </div>
+                        <p class="mb-0 small">{{item.post.usuario.email}}</p>
+                      </div>
+                    </div>
+                    <!-- Card feed action dropdown START -->
+                    <div class="dropdown">
+                      <a href="#" class="text-secondary btn btn-secondary-soft-hover py-1 px-2" id="cardFeedAction" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-three-dots"></i>
+                      </a>
+                      <!-- Card feed action dropdown menu -->
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardFeedAction">
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark fa-fw pe-2"></i>Save post</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-person-x fa-fw pe-2"></i>Unfollow lori ferguson </a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-x-circle fa-fw pe-2"></i>Hide post</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-slash-circle fa-fw pe-2"></i>Block</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-flag fa-fw pe-2"></i>Report post</a></li>
+                      </ul>
+                    </div>
+                    <!-- Card feed action dropdown END -->
+                  </div>
+                </div>
+                <!-- Card header END -->
+                <!-- Card body START -->
+                <div class="card-body pb-3">
+                  <div class="mb-3" style="cursor: pointer;" [innerHTML]="item.post.contenido" (click)="redirect_post(item.post._id)">
+                                
+                  </div>
+                  <!-- Card img -->
+    
+                  <div *ngIf="item.post.tipo == 'Media'" style="background-image: url({{url}}obtener_post_img/{{item.post.media}}) !important;height: 350px;background-size: cover !important;
+                  background-repeat: no-repeat !important;
+                  background-position: center !important;">
+    
+                  </div>
+                  <!-- Feed react START -->
+                  <ul class="nav nav-stack py-3 small">
+                    <li class="nav-item">
+                      <a class="nav-link" [ngClass]="{'active': item.like != null}" style="cursor: pointer;" (click)="set_liked(item.post._id)"> 
+                        <i class="bi bi-hand-thumbs-up-fill pe-1"></i>Liked ({{item.likes.length}})
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#!"> <i class="bi bi-chat-fill pe-1">
+                        </i>Comentarios ({{item.comentarios.length}})
+                      </a>
+                    </li>
+                    <!-- Card share action START -->
+                    <li class="nav-item dropdown ms-sm-auto">
+                      <a class="nav-link mb-0" href="#" id="cardShareAction" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-reply-fill flip-horizontal ps-1"></i>Share (3)
+                      </a>
+                      <!-- Card share action dropdown menu -->
+                      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="cardShareAction">
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-envelope fa-fw pe-2"></i>Send via Direct Message</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-bookmark-check fa-fw pe-2"></i>Bookmark </a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-link fa-fw pe-2"></i>Copy link to post</a></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-share fa-fw pe-2"></i>Share post via …</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"> <i class="bi bi-pencil-square fa-fw pe-2"></i>Share to News Feed</a></li>
+                      </ul>
+                    </li>
+                    <!-- Card share action END -->
+                  </ul>
+                  <!-- Feed react END -->
+      
+                  <!-- Add comment -->
+                  <div class="d-flex mb-3">
+                    <!-- Avatar -->
+                    <div class="avatar avatar-xs me-2">
+                      <a href="#!"> <img class="avatar-img rounded-circle" src="assets/images/avatar/12.jpg" alt=""> </a>
+                    </div>
+                    <!-- Comment box  -->
+                    <form class="w-100">
+                      <textarea [autosize]="true" class="form-control pe-4 bg-light" rows="1" placeholder="Escribe un comentario" name="comentario" [(ngModel)]="item.comentario" (keyup.ENTER)="set_comentario(item)"></textarea>
+    
+                      <small class="text-primary" style="cursor: pointer;" (click)="set_comentario(item)">Comentar</small>
+                    </form>
+                  </div>
+                  <!-- Comment wrap START -->
+                  <ul class="comment-wrap list-unstyled">
+                    <!-- Comment item START -->
+                    <li class="comment-item" *ngFor="let subitem of item.comentarios;let idx_c = index">
+                      <div class="d-flex position-relative">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xs">
+                          <a href="#!">
+                            <img class="avatar-img rounded-circle" [src]="subitem.comentario.usuario.avatar" alt="">
+                          </a>
+                        </div>
+                        <div class="ms-2">
+                          <!-- Comment by -->
+                          <div class="bg-light rounded-start-top-0 p-3 rounded">
+                            <div class="d-flex justify-content-between">
+                              <h6 class="mb-1"> 
+                                <a href="#!">
+                                  {{subitem.comentario.usuario.nombres.split(' ')[0]}}
+                                  {{subitem.comentario.usuario.apellidos.split(' ')[0]}}
+                                </a>
+                              </h6>
+                              <small class="ms-2">{{subitem.comentario.createdAt|dateAgo}}</small>
+                            </div>
+                            <p class="small mb-0">{{subitem.comentario.comentario}}</p>
+                          </div>
+                          <!-- Comment react -->
+                          <ul class="nav nav-divider py-2 small">
+                            <li class="nav-item">
+                              <a class="nav-link text-primary" style="cursor: pointer;" (click)="openRespuesta(idx_p,idx_c)"> Responder</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+    
+                      <div *ngIf="subitem.box_reply" class="d-flex mb-3" style="padding-left: 2.75rem;">
+                        <!-- Avatar -->
+                        <div class="avatar avatar-xs me-2">
+                          <a href="#!"> <img class="avatar-img rounded-circle" src="assets/images/avatar/12.jpg" alt=""> </a>
+                        </div>
+                        <!-- Comment box  -->
+                        <form class="w-100">
+                          <textarea [autosize]="true" class="form-control pe-4 bg-light" rows="1" placeholder="Escribe un comentario" name="respuesta" [(ngModel)]="subitem.respuesta" (keyup.ENTER)="set_respuesta(item)"></textarea>
+        
+                          <small class="text-primary" style="cursor: pointer;" (click)="set_respuesta(subitem)">Comentar</small>
+                        </form>
+                      </div>
+    
+                      <!-- Comment item nested START -->
+                      <ul class="comment-item-nested list-unstyled mb-3">
+                        
+                        <!-- Comment item START -->
+                        <li class="comment-item mb-2" *ngFor="let replay of subitem.respuestas">
+                          <div class="d-flex">
+                            <!-- Avatar -->
+                            <div class="avatar avatar-story avatar-xs">
+                              <a href="#!"><img class="avatar-img rounded-circle" [src]="replay.usuario.avatar" alt=""></a>
+                            </div>
+                            <!-- Comment by -->
+                            <div class="ms-2">
+                              <div class="bg-light p-3 rounded">
+                                <div class="d-flex justify-content-between">
+                                  <h6 class="mb-1"> 
+                                    <a href="#!"> 
+                                      {{replay.usuario.nombres.split(' ')[0]}}
+                                      {{replay.usuario.apellidos.split(' ')[0]}} 
+                                    </a> 
+                                  </h6>
+                                  <small class="ms-2">{{replay.createdAt|dateAgo}}</small>
+                                </div>
+                                <p class="small mb-0">
+                                  {{replay.comentario}}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                        <!-- Comment item END -->
+                      </ul>
+                      <!-- Load more replies -->
+                      
+                      <!-- Comment item nested END -->
+                    </li>
+                    <!-- Comment item END -->
+                  </ul>
+                  <!-- Comment wrap END -->
+                </div>
+                <!-- Card body END -->
+                <!-- Card footer START -->
+                
+                <!-- Card footer END -->
+              </div>
+
+              <button class="btn btn-sm btn-primary-soft" style="margin-bottom: 2rem;" (click)="more()">
+                Mostrar mas publicaciones
+              </button>
+            </ng-container>
+          </ng-container>
+
+        </div>
+        <!-- Main content END -->
+  
+        <!-- Right sidebar START -->
+        <div class="col-lg-3">
+          <app-card-usuarios></app-card-usuarios>
+        </div>
+        <!-- Right sidebar END -->
+  
+      </div> <!-- Row END -->
+    </div>
+    <!-- Container END -->
+  
+  </main>
+  <!-- **************** MAIN CONTENT END **************** -->
+
+
+
+
+  <div class="modal fade" id="createPost" tabindex="-1" aria-labelledby="feedActionPhotoLabel" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!-- Modal feed header START -->
+        <div class="modal-header" style="border-bottom: 0px !important;">
+          <h5 class="modal-title" id="feedActionPhotoLabel">Nuevo post</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <!-- Modal feed header END -->
+  
+          <!-- Modal feed body START -->
+          <div class="modal-body">
+            <!-- Add Feed -->
+            <div class="d-flex mb-3">
+              <!-- Avatar -->
+              <div class="avatar avatar-xs me-2">
+                <img class="avatar-img rounded-circle" [src]="avatar" alt="">
+              </div>
+              <!-- Feed box  -->
+              <form class="w-100">
+                <textarea class="form-control pe-4 fs-3 lh-1 border-0" [autosize]="true" placeholder="¿Que estas pensando ahora?" name="contenido" [(ngModel)]="post.contenido"></textarea>
+              </form>
+            </div>
+
+            <ng-container *ngIf="!str_image">
+              <label for="uploadPost" class="w-100" style="cursor:pointer">
+                <span class="text-primary pb-3">
+                  Subir imagen
+                </span>
+                <br>
+                <small class="text-danger" *ngIf="msm_story_error">
+                  {{msm_story_error}}
+                </small>
+              </label>
+              <input type="file" id="uploadPost" style="display: none;" (change)="uploadImage($event)">
+            </ng-container>
+            <ng-container *ngIf="str_image">
+              <div>
+                <div style="background-image: url({{str_image}}) !important;height: 300px;background-size: cover !important;
+                background-repeat: no-repeat !important;
+                background-position: center !important;">
+
+                </div>
+                <small class="text-danger" style="cursor: pointer;" (click)="removeImage()">Quitar</small>
+              </div>
+            </ng-container>
+  
+          </div>
+          <!-- Modal feed body END -->
+  
+          <!-- Modal feed footer -->
+          <div class="modal-footer ">
+            <!-- Button -->
+              <button type="button" class="btn btn-danger me-2" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" (click)="createPost()">Publicar</button>
+          </div>
+          <!-- Modal feed footer -->
+      </div>
+    </div>
+  </div>
